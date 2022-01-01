@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ranger-admin-server
+  namespace: ranger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ranger-admin-server
+  template:
+    metadata:
+        labels:
+          app: ranger-admin-server
+    spec:
+      containers:
+        - name: ranger-admin-server
+          image: "pongthep/apache-ranger-2_1-k8s:0.0.1"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 6080
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ranger-admin
+  namespace: ranger
+spec:
+  ports:
+    - name: http
+      port: 6080
+      protocol: TCP
+      targetPort: 6080
+  selector:
+    app: ranger-admin-server

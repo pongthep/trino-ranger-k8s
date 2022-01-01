@@ -21,8 +21,6 @@ RUN mv /opt/trino/etc/coordinator-config.properties /opt/trino/etc/config.proper
 COPY docker-entrypoint.sh /opt/trino
 RUN chmod +x /opt/trino/docker-entrypoint.sh
 
-USER root
-
 ADD ranger-2.1.0-trino-plugin /opt/ranger-2.1.0-trino-plugin/
 
 ADD enable-trino-plugin.sh /opt/ranger-2.1.0-trino-plugin/

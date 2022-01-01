@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trino-coordinator
+  namespace: trino
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trino-coordinator
+  template:
+    metadata:
+      labels:
+        app: trino-coordinator
+    spec:
+      containers:
+        - name: coordinator-server
+          image: "pongthep/trino-coordinator:1.0.1"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - name: etc-dir
+              mountPath: "/opt/trino/etc"
+              readOnly: true
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "1500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1500m"
+      volumes:
+        - name: etc-dir
+          configMap:
+            name: etc-configs
+            items:
+              - key: node.properties
+                path: node.properties
+              - key: coordinator-jvm.config
+                path: jvm.config
+              - key: coordinator-config.properties
+                path: config.properties
+      nodeSelector:
+        zone: stateful
+        app: trino
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trino-coordinator-service
+  namespace: trino
+  labels:
+    app: trino-coordinator
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: trino-coordinator

@@ -1,4 +1,4 @@
-k8s-deployment/trino/trino-server-362/
+docker-image/trino/trino-server-362/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

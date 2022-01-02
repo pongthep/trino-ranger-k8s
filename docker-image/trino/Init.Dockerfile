@@ -15,8 +15,8 @@ ADD catalog /opt/trino/catalog
 
 RUN mv /opt/trino/etc/coordinator-config.properties /opt/trino/etc/config.properties
 
-COPY docker-entrypoint.sh /opt/trino
-RUN chmod +x /opt/trino/docker-entrypoint.sh
+COPY docker-entrypoint-coordinator.sh /opt/trino/docker-entrypoint-coordinator.sh
+RUN chmod +x /opt/trino/docker-entrypoint-coordinator.sh
 
 COPY init-bash.sh /opt/trino
 

@@ -6,4 +6,4 @@ ARG TRINO_VERSION=362
 RUN apt-get update
 RUN apt-get install -y wget python less
 
-ENTRYPOINT /etc/trino/docker-entrypoint.sh
+ENTRYPOINT /etc/trino/docker-entrypoint-coordinator.sh

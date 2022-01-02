@@ -4,7 +4,7 @@ metadata:
   name: trino-worker
   namespace: ranger
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: trino-worker
@@ -15,12 +15,8 @@ spec:
     spec:
       containers:
         - name: worker-node
-          image: "pongthep/trino-worker:2.0.3"
+          image: "pongthep/trino-k8s-worker:1.0.1"
           imagePullPolicy: IfNotPresent
-          volumeMounts:
-            - name: etc-dir
-              mountPath: "/etc/trino/etc"
-              readOnly: true
           resources:
             requests:
               memory: "1Gi"
@@ -28,14 +24,3 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "1500m"
-      volumes:
-        - name: etc-dir
-          configMap:
-            name: etc-configs
-            items:
-              - key: node.properties
-                path: node.properties
-              - key: worker-jvm.config
-                path: jvm.config
-              - key: worker-config.properties
-                path: config.properties

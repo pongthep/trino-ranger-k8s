@@ -1,7 +1,7 @@
 # trino-k8s
 ## Version
 
-357
+362
 ## download trio and put it inside trino-server folder
 
 wget https://repo1.maven.org/maven2/io/trino/trino-server/362/trino-server-362.tar.gz

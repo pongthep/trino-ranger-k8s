@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: init-trino
-          image: pongthep/trino-k8s-init:1.0.1
+          image: pongthep/trino-k8s-init:1.0.0
           command: ["sh","/opt/trino/init-bash.sh"]
           volumeMounts:
             - mountPath: "/etc/trino"
@@ -25,7 +25,7 @@ spec:
               name: trino-ranger-plugin-storage
       containers:
         - name: coordinator-server
-          image: "pongthep/trino-coordinator:4.0.3"
+          image: "pongthep/trino-k8s-coordinator:1.0.0"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -44,16 +44,6 @@ spec:
               memory: "1Gi"
               cpu: "1500m"
       volumes:
-        - name: etc-dir
-          configMap:
-            name: etc-configs
-            items:
-              - key: node.properties
-                path: node.properties
-              - key: coordinator-jvm.config
-                path: jvm.config
-              - key: coordinator-config.properties
-                path: config.properties
         - name: trino-storage
           emptyDir: {}
         - name: trino-ranger-plugin-storage

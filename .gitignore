@@ -1,4 +1,5 @@
 docker-image/trino/trino-server-362/
+docker-image/trino/ranger-2.1.0-trino-plugin/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

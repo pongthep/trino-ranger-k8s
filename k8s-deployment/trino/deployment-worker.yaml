@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trino-worker
+  namespace: ranger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trino-worker
+  template:
+    metadata:
+      labels:
+        app: trino-worker
+    spec:
+      containers:
+        - name: worker-node
+          image: "pongthep/trino-worker:2.0.3"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: etc-dir
+              mountPath: "/etc/trino/etc"
+              readOnly: true
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "1500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1500m"
+      volumes:
+        - name: etc-dir
+          configMap:
+            name: etc-configs
+            items:
+              - key: node.properties
+                path: node.properties
+              - key: worker-jvm.config
+                path: jvm.config
+              - key: worker-config.properties
+                path: config.properties

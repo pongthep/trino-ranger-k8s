@@ -1,9 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: trino-coordinator
-  namespace: trino
+  namespace: ranger
 spec:
+  serviceName: "trino-coordinator"
   replicas: 1
   selector:
     matchLabels:
@@ -13,18 +14,28 @@ spec:
       labels:
         app: trino-coordinator
     spec:
+      initContainers:
+        - name: init-trino
+          image: pongthep/trino-init:1.0.13
+          command: ["sh","/opt/trino/init-bash.sh"]
+          volumeMounts:
+            - mountPath: "/etc/trino"
+              name: trino-storage
+            - mountPath: "/etc/ranger-2.1.0-trino-plugin"
+              name: trino-ranger-plugin-storage
       containers:
         - name: coordinator-server
-          image: "pongthep/trino-coordinator:1.0.1"
+          image: "pongthep/trino-coordinator:4.0.3"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
           volumeMounts:
-            - name: etc-dir
-              mountPath: "/opt/trino/etc"
-              readOnly: true
+            - mountPath: "/etc/trino"
+              name: trino-storage
+            - mountPath: "/etc/ranger-2.1.0-trino-plugin"
+              name: trino-ranger-plugin-storage
           resources:
             requests:
               memory: "1Gi"
@@ -43,15 +54,16 @@ spec:
                 path: jvm.config
               - key: coordinator-config.properties
                 path: config.properties
-      nodeSelector:
-        zone: stateful
-        app: trino
+        - name: trino-storage
+          emptyDir: {}
+        - name: trino-ranger-plugin-storage
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: trino-coordinator-service
-  namespace: trino
+  namespace: ranger
   labels:
     app: trino-coordinator
 spec:

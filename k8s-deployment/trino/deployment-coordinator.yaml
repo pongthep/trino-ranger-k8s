@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: init-trino
-          image: pongthep/trino-init:1.0.13
+          image: pongthep/trino-k8s-init:1.0.1
           command: ["sh","/opt/trino/init-bash.sh"]
           volumeMounts:
             - mountPath: "/etc/trino"
